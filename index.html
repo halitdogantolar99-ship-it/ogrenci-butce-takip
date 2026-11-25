@@ -13,6 +13,8 @@
         .summary-box h4 { margin: 0 0 8px 0; color: #7f8c8d; font-size: 14px; }
         .summary-box p { margin: 0; font-size: 20px; font-weight: bold; color: #2c3e50; }
         .form-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .list-header h3 { margin: 0; }
         input, select, button { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
         input { flex: 1; }
         button { background-color: #2ecc71; color: white; border: none; cursor: pointer; font-weight: bold; }
@@ -69,9 +71,18 @@
         </div>
     </div>
 
-    <!-- Harcama Listesi Bölümü -->
+    <!-- Harcama Listesi ve Filtreleme Bölümü -->
     <div class="card">
-        <h3>Harcama Listesi</h3>
+        <div class="list-header">
+            <h3>Harcama Listesi</h3>
+            <select id="filter-category" onchange="renderExpenses()">
+                <option value="Tümü">Tüm Kategoriler</option>
+                <option value="Yemek">Yemek</option>
+                <option value="Ulaşım">Ulaşım</option>
+                <option value="Kırtasiye">Kırtasiye</option>
+                <option value="Diğer">Diğer</option>
+            </select>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -138,9 +149,14 @@
 
         function renderExpenses() {
             const list = document.getElementById('expense-list');
+            const selectedFilter = document.getElementById('filter-category').value;
             list.innerHTML = '';
 
-            expenses.forEach(item => {
+            const filteredExpenses = selectedFilter === 'Tümü'
+                ? expenses
+                : expenses.filter(item => item.category === selectedFilter);
+
+            filteredExpenses.forEach(item => {
                 const row = `<tr>
                     <td>${item.desc}</td>
                     <td>${item.category}</td>
