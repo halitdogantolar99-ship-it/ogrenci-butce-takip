@@ -19,6 +19,8 @@
         button:hover { background-color: #27ae60; }
         .btn-budget { background-color: #3498db; }
         .btn-budget:hover { background-color: #2980b9; }
+        .btn-delete { background-color: #e74c3c; padding: 6px 12px; font-size: 13px; }
+        .btn-delete:hover { background-color: #c0392b; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background-color: #34495e; color: white; }
@@ -76,6 +78,7 @@
                     <th>Açıklama</th>
                     <th>Kategori</th>
                     <th>Tutar (TL)</th>
+                    <th>İşlem</th>
                 </tr>
             </thead>
             <tbody id="expense-list"></tbody>
@@ -107,12 +110,18 @@
                 return;
             }
 
-            expenses.push({ desc, amount, category });
+            expenses.push({ id: Date.now(), desc, amount, category });
             renderExpenses();
             updateSummary();
 
             document.getElementById('desc').value = '';
             document.getElementById('amount').value = '';
+        }
+
+        function deleteExpense(id) {
+            expenses = expenses.filter(item => item.id !== id);
+            renderExpenses();
+            updateSummary();
         }
 
         function updateSummary() {
@@ -136,6 +145,7 @@
                     <td>${item.desc}</td>
                     <td>${item.category}</td>
                     <td>${item.amount.toFixed(2)} ₺</td>
+                    <td><button class="btn-delete" onclick="deleteExpense(${item.id})">Sil</button></td>
                 </tr>`;
                 list.innerHTML += row;
             });
